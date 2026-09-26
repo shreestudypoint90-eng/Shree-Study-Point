@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shree Study Point — 48 Seat Booking</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:#182536;
+background:
+radial-gradient(circle at 10% 10%,#dff4ff 0,transparent 28%),
+radial-gradient(circle at 90% 20%,#e4f7ee 0,transparent 30%),
+linear-gradient(135deg,#f4f8fb,#eef5f8 55%,#f6faf7);
+min-height:100vh}
+header{background:linear-gradient(135deg,#102b46 0%,#164c69 48%,#087568 100%);color:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:14px;box-shadow:0 8px 28px #12304b33;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:#ffffff18;border:1px solid #ffffff35;display:grid;place-items:center;font-size:27px;box-shadow:inset 0 1px #ffffff22}
+.brandTitle{font-size:21px;font-weight:850;line-height:1.05}.brandSub{font-size:11px;opacity:.78;letter-spacing:1.3px;text-transform:uppercase}
+.ownerBtn{background:#fff;color:#12324d;border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px #0002}
+.wrap{max-width:1120px;width:94%;margin:25px auto 45px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#102f4b,#145a73 55%,#087b6d);color:#fff;border-radius:24px;padding:34px 28px;margin-bottom:20px;box-shadow:0 14px 32px #10324d25}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#ffffff0d}
+.hero:before{width:260px;height:260px;right:-90px;top:-110px}.hero:after{width:180px;height:180px;left:-80px;bottom:-110px}
+.heroContent{position:relative;z-index:1;max-width:700px}
+.hero h1{font-size:36px;margin:0 0 9px;letter-spacing:-.6px}.hero p{margin:0;opacity:.9;font-size:15px}
+.heroBadges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.badge{padding:7px 11px;border:1px solid #ffffff30;background:#ffffff12;border-radius:999px;font-size:12px}
+.card{background:#ffffffea;backdrop-filter:blur(9px);border:1px solid #fff;border-radius:20px;padding:21px;margin-bottom:18px;box-shadow:0 10px 28px #19324d12}
+.card h2,.card h3{margin-top:0;color:#17344d}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.form{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+label{font-size:13px;font-weight:750;color:#33465a}
+input,select{width:100%;padding:11px 12px;margin-top:5px;box-sizing:border-box;border:1px solid #cfdae4;border-radius:10px;background:#fbfdff;outline:none;transition:.15s}
+input:focus,select:focus{border-color:#2584a2;box-shadow:0 0 0 3px #2584a21a}
+.legend{display:flex;gap:15px;flex-wrap:wrap;color:#526273;font-size:13px;margin:6px 0 15px}
+.seats{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.seat{height:72px;border:2px solid #9ad7b4;background:linear-gradient(145deg,#f4fff8,#e5f8ee);border-radius:14px;cursor:pointer;transition:.16s;box-shadow:0 4px 11px #16794b12;color:#173b31}
+.seat:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 9px 18px #16794b20}
+.selected{background:linear-gradient(145deg,#e9f3ff,#d9eaff)!important;border-color:#2c7ed0!important;box-shadow:0 0 0 3px #2c7ed01f!important;color:#164d80}
+.booked{background:linear-gradient(145deg,#fff1f1,#ffe3e3)!important;border-color:#d75b5b!important;color:#9e2929;cursor:not-allowed}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.dot.green{background:#31a66b}.dot.blue{background:#327fce}.dot.red{background:#d65a5a}
+.btn{background:linear-gradient(135deg,#1769aa,#0d7d78);color:white;border:0;border-radius:10px;padding:12px 20px;font-weight:800;cursor:pointer;box-shadow:0 5px 13px #1769aa25;transition:.15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}.btn.secondary{background:#586978}.btn.danger{background:#c13d38}.btn.green{background:#168452}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.infoStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.infoBox{background:#ffffffcc;border:1px solid #fff;border-radius:16px;padding:14px 16px;box-shadow:0 7px 18px #19324d0d}
+.infoBox b{display:block;color:#143b58;margin-bottom:4px}.infoBox span{font-size:12px;color:#617184}
+.booking{padding:11px;border:1px solid #dde5ec;border-radius:11px;margin:7px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fbfdff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#f7fafc;border:1px solid #e1e8ef;border-radius:13px;padding:14px}.stat b{font-size:24px;display:block;margin-top:5px;color:#123e5a}
+.ownerPanel{display:none}.ownerTop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ownerTools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.statusSelect{padding:7px 8px;border:1px solid #cbd8e2;border-radius:8px;background:#fff;font-weight:700}
+.ownerQuick{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.backupNote{padding:12px;border-radius:12px;background:#f7fbff;border:1px dashed #b9cfe0;margin-top:12px}
+.small{font-size:13px;color:#617080}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:9px;border-bottom:1px solid #e3e8ed;text-align:left;font-size:13px}th{background:#f2f6f9}
+.tableWrap{overflow:auto}
+.contactGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.contactCard{padding:13px;border:1px solid #dfe7ee;border-radius:13px;background:#f8fbfd}
+.footerNote{text-align:center;color:#6b7987;font-size:12px;padding:8px}
+@media(max-width:800px){.form{grid-template-columns:repeat(2,1fr)}.seats{grid-template-columns:repeat(6,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.ownerTools{grid-template-columns:1fr}.infoStrip{grid-template-columns:1fr}.hero h1{font-size:29px}}
+@media(max-width:500px){header{padding:12px 4%}.brandTitle{font-size:17px}.brandSub{font-size:9px}.ownerBtn{padding:9px}.wrap{width:93%;margin-top:17px}.form{grid-template-columns:1fr}.seats{grid-template-columns:repeat(4,1fr);gap:7px}.seat{height:65px}.stats{grid-template-columns:1fr}.contactGrid{grid-template-columns:1fr}.hero{padding:28px 20px;border-radius:20px}}
+</style>
+
+<style>
+.langSwitch{display:flex;align-items:center;gap:4px;background:#ffffff18;border:1px solid #ffffff35;border-radius:11px;padding:3px}
+.langSwitch button{border:0;background:transparent;color:#fff;padding:7px 10px;border-radius:8px;font-weight:800;cursor:pointer}
+.langSwitch button.active{background:#fff;color:#12324d}
+.headerActions{display:flex;align-items:center;gap:8px}
+@media(max-width:500px){.headerActions{gap:5px}.langSwitch button{padding:6px 8px;font-size:12px}}
+#ownerSeatManager{margin:18px 0}
+.seat-manager-card{background:linear-gradient(135deg,#f7fbff,#eef7f2);border:1px solid #d8e7e2;border-radius:18px;padding:18px}
+.seat-manager-title{font-size:20px;font-weight:800;color:#17324d;margin-bottom:6px}
+.seat-manager-help{margin:0 0 14px;color:#617182;font-size:14px}
+.seat-manager-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.seat-manager-row input{flex:1;min-width:190px;padding:11px 13px;border:1px solid #cbd8e2;border-radius:10px;font-size:14px}
+.seat-manager-row button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}
+.managed-seat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.managed-seat-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid #e0e7ed;border-radius:10px;padding:9px 10px;font-weight:700}
+.danger-seat-btn{border:1px solid #efb4b4;background:#fff4f4;color:#b42318;border-radius:8px;padding:6px 8px;cursor:pointer;font-size:12px}
+.seat-count-note{margin-top:14px;color:#516170;font-size:14px}
+</style>
+
+
+<style>
+:root{--navy:#0b1f33;--blue:#1769aa;--teal:#0b8b78;--ink:#17283a;--muted:#667789;--line:#dfe8ef;--glass:rgba(255,255,255,.84)}
+html{scroll-behavior:smooth}
+body{font-family:Inter,Segoe UI,system-ui,-apple-system,sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 8%,rgba(75,190,232,.16),transparent 30%),radial-gradient(circle at 88% 14%,rgba(58,190,145,.14),transparent 28%),linear-gradient(135deg,#f5f9fc 0%,#eef5f7 52%,#f7fbf9 100%)}
+header{background:rgba(9,31,49,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.12);padding:12px 5%;box-shadow:0 10px 35px rgba(8,31,48,.22)}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.22);box-shadow:0 8px 22px rgba(0,0,0,.12),inset 0 1px rgba(255,255,255,.25)}
+.brandTitle{letter-spacing:-.3px}.ownerBtn{border:1px solid #dce9f2;background:linear-gradient(180deg,#fff,#edf5f9);box-shadow:0 6px 18px rgba(0,0,0,.14);transition:.18s}.ownerBtn:hover{transform:translateY(-1px)}
+.wrap{max-width:1180px;margin:28px auto 55px}
+.hero{border:1px solid rgba(255,255,255,.25);border-radius:28px;padding:42px 34px;background:linear-gradient(135deg,#0a2238 0%,#155875 55%,#078774 100%);box-shadow:0 22px 55px rgba(12,52,73,.2)}
+.hero:before{background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)}.hero:after{background:radial-gradient(circle,rgba(95,232,194,.12),transparent 65%)}
+.hero h1{font-size:clamp(30px,4vw,44px);letter-spacing:-1.2px}.hero p{font-size:16px;max-width:680px;line-height:1.65}.badge{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);backdrop-filter:blur(8px);padding:8px 12px}
+.infoStrip{gap:14px}.infoBox,.card{background:var(--glass);border:1px solid rgba(255,255,255,.92);box-shadow:0 14px 35px rgba(24,55,78,.09);backdrop-filter:blur(12px)}
+.infoBox{padding:17px 18px;border-radius:18px}.infoBox b{font-size:14px}.infoBox span{line-height:1.5}
+.card{border-radius:22px;padding:23px}.card h2{font-size:20px;letter-spacing:-.2px}.card h3{font-size:18px}
+.sectionTitle{margin-bottom:5px}.sectionTitle h2{margin-bottom:0}
+input,select{border:1px solid #ccd9e3;background:rgba(255,255,255,.92);border-radius:12px;padding:12px 13px;box-shadow:inset 0 1px 2px rgba(20,50,70,.03)}
+input:hover,select:hover{border-color:#b8c9d6}input:focus,select:focus{border-color:#1b83a4;box-shadow:0 0 0 4px rgba(27,131,164,.11)}
+.seats{gap:11px}.seat{height:76px;border-radius:16px;border:1px solid #9ad7b4;box-shadow:0 7px 16px rgba(22,121,75,.1);font-size:13px}.seat:hover:not(:disabled){transform:translateY(-3px) scale(1.01)}
+.selected{border:2px solid #2c7ed0!important}.booked{border:1px solid #d75b5b!important;box-shadow:none}
+.btn{border-radius:12px;padding:11px 17px;box-shadow:0 7px 16px rgba(23,105,170,.17)}.btn.secondary{background:linear-gradient(135deg,#657685,#4f6070)}
+.stats{grid-template-columns:repeat(6,1fr);gap:12px}.stat{border-radius:16px;padding:16px;background:linear-gradient(180deg,#fff,#f5f9fb);border:1px solid #e0e9ef;box-shadow:0 8px 18px rgba(24,55,78,.06)}.stat b{font-size:25px}
+.ownerPanel .card:first-child{background:linear-gradient(135deg,#f8fcff,#eef8f5)}.ownerTools{grid-template-columns:1.1fr 1fr 2fr}.ownerQuick{gap:9px}
+.booking{border:1px solid #e1e9ef;background:rgba(255,255,255,.75);border-radius:13px;padding:13px}.tableWrap{border:1px solid #e2e9ee;border-radius:14px}.tableWrap table{margin-top:0}th{background:#f1f6f9;color:#3d5366;font-weight:800}td{background:rgba(255,255,255,.55)}
+.contactCard{background:linear-gradient(180deg,#fff,#f7fbfd);border-radius:14px}.seat-manager-card{background:linear-gradient(135deg,#f8fcff,#eef8f3);box-shadow:inset 0 1px rgba(255,255,255,.8)}
+.footerNote{opacity:.8}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(3,1fr)}.ownerTools{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:34px 24px}}
+@media(max-width:500px){.wrap{margin-top:18px}.hero{padding:29px 20px;border-radius:22px}.card{padding:18px;border-radius:18px}.seats{gap:7px}.seat{height:65px;border-radius:13px}.stats{grid-template-columns:1fr 1fr}.headerActions{flex-wrap:wrap;justify-content:flex-end}}
+</style>
+</head>
+<body>
+<noscript><div style="padding:20px;font-family:Arial">JavaScript enable karein to seat booking website chalegi.</div></noscript>
+<header>
+  <div class="brand"><div class="logo">📚</div><span><div class="brandTitle">Shree Study Point</div><div class="brandSub">Quiet • Focus • Learn</div></span></div>
+  <div class="headerActions"><div class="langSwitch" aria-label="Language"><button id="langEn" type="button" onclick="setLang('en')">EN</button><button id="langHi" type="button" onclick="setLang('hi')">हिंदी</button></div><button class="ownerBtn" onclick="ownerLogin()" data-i18n="ownerPanelBtn">🔐 Owner Panel</button></div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+  <div class="heroContent">
+    <h1 data-i18n="heroTitle">📖 Your Dedicated Study Space</h1>
+    <p data-i18n="heroDesc">Shaant environment, comfortable seating aur focused study ke liye apni seat pehle se reserve karein.</p>
+    <div class="heroBadges"><span class="badge" id="seatBadge">📚 48 Dedicated Seats</span><span class="badge" data-i18n="badgeTime">⏰ Flexible Timings</span><span class="badge" data-i18n="badgeFocus">🎯 Focused Study</span><span class="badge" data-i18n="badgeEasy">🔒 Easy Booking</span></div>
+  </div>
+</div>
+<div class="infoStrip">
+  <div class="infoBox"><b data-i18n="peaceTitle">🤫 Peaceful Environment</b><span data-i18n="peaceDesc">Distraction kam, concentration zyada.</span></div>
+  <div class="infoBox"><b data-i18n="chooseTitle">💺 Choose Your Seat</b><span data-i18n="chooseDesc">Available seat select karke book karein.</span></div>
+  <div class="infoBox"><b data-i18n="supportTitle">📞 Quick Support</b><span data-i18n="supportDesc">Owner contacts se directly connect karein.</span></div>
+</div>
+
+  <div class="card">
+    <div class="sectionTitle"><h2 data-i18n="bookingDetails">📝 1. Booking Details</h2><span class="small" data-i18n="timingHelp">Apni study timing select karein</span></div>
+    <div class="form">
+      <label><span data-i18n="nameLabel">Name</span><input id="name" placeholder="Student name"></label>
+      <label><span data-i18n="mobileLabel">Mobile</span><input id="mobile" maxlength="10" inputmode="numeric" placeholder="10 digit mobile"></label>
+      <label><span data-i18n="dateLabel">Date</span><input id="date" type="date"></label>
+      <label><span data-i18n="planLabel">Booking Type</span><select id="plan"><option value="full" data-i18n="fullDay">Full Day</option><option value="half" data-i18n="halfDay">Half Day</option></select></label>
+      <label id="halfWrap" style="display:none"><span data-i18n="sessionLabel">Half Day Session</span><select id="session"><option value="morning" data-i18n="morning">Morning</option><option value="evening" data-i18n="evening">Evening</option></select></label>
+      <label><span data-i18n="startLabel">Start</span><input id="start" type="time" value="08:00" readonly></label>
+      <label><span data-i18n="endLabel">End</span><input id="end" type="time" value="20:00" readonly></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sectionTitle"><h2 data-i18n="seatTitle">💺 2. Choose Your Study Seat</h2><span class="small" data-i18n="greenAvailable">Green = available</span></div>
+    <p><div class="legend"><span data-i18n="available"><i class="dot green"></i>Available</span><span data-i18n="selectedLegend"><i class="dot blue"></i>Selected</span><span data-i18n="bookedLegend"><i class="dot red"></i>Booked</span></div></p>
+    <div id="seats" class="seats"></div>
+  </div>
+
+  <div class="card">
+    <div class="sectionTitle"><h2 data-i18n="confirmTitle">✅ 3. Confirm Your Booking</h2><span class="small" data-i18n="confirmHelp">Seat lock karne se pehle details check karein</span></div>
+    <p id="sel">Seat select karein.</p><div id="bookingHint" class="small" style="padding:10px 12px;border-radius:11px;background:#f5f9fb;border:1px solid #e3ebf0">💡 Select a date, timing and available seat.</div>
+    <button id="go" class="btn" disabled data-i18n="confirmBtn">Confirm Booking</button>
+  </div>
+
+  <div class="card" id="ownerContactCard">
+    <h2 data-i18n="helpTitle">📞 Need Help? Contact Study Point</h2>
+    <p id="ownerContactDisplay">Owner contact details yahan dikhengi.</p>
+    <div id="ownerContactButtons" class="contactGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="myBookingsTitle">📋 My Bookings</h2>
+    <div id="mine">Mobile number enter karein.</div>
+  </div>
+
+  <section id="ownerPanel" class="ownerPanel">
+    <div class="card">
+      <div class="ownerTop">
+        <div>
+          <h2 style="margin:0">👑 Owner Dashboard</h2>
+          <p class="small">Bookings ko manage karein, daily collection dekhein aur CSV report download karein.</p>
+        </div>
+        <button class="btn secondary" onclick="ownerLogout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Dashboard</h3>
+      <div class="stats">
+        <div class="stat">Total Bookings<b id="stTotal">0</b></div>
+        <div class="stat">Aaj ki Bookings<b id="stToday">0</b></div>
+        <div class="stat">Booked Seats Today<b id="stSeats">0</b></div>
+        <div class="stat">Estimated Collection<b id="stRevenue">₹0</b></div>
+        <div class="stat">Pending Payment<b id="stPending">0</b></div>
+        <div class="stat">Free Seats<b id="stFree">0</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Owner Settings</h3>
+      <div class="ownerTools">
+        <label>Daily Seat Fee (₹)<input id="fee" type="number" min="0" value="500"></label>
+        <label>Report Date<input id="ownerDate" type="date"></label>
+        <div style="display:flex;align-items:end;gap:8px;flex-wrap:wrap">
+          <button class="btn green" onclick="exportCSV()">⬇ Export CSV</button>
+          <button class="btn" onclick="printDailyReport()">🖨 Print Report</button>
+          <button class="btn" onclick="refreshOwner()">Refresh</button>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e3e7eb">
+        <h4 style="margin:0 0 10px">🔐 Security & Contact</h4>
+        <div class="form" style="grid-template-columns:repeat(3,1fr)">
+          <label>Current PIN<input id="oldPin" type="password" inputmode="numeric" maxlength="12" placeholder="Current PIN"></label>
+          <label>New PIN<input id="newPin" type="password" inputmode="numeric" maxlength="12" placeholder="New PIN"></label>
+          <label>Confirm New PIN<input id="confirmPin" type="password" inputmode="numeric" maxlength="12" placeholder="Confirm PIN"></label>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn" onclick="changePin()">Change Owner PIN</button>
+          <button class="btn secondary" onclick="resetPin()">Reset PIN to Default</button>
+        </div>
+        <div class="form" style="grid-template-columns:repeat(2,1fr);margin-top:12px">
+          <label>Contact 1<input id="ownerPhone1" inputmode="tel" maxlength="15" placeholder="9876543210"></label>
+          <label>Contact 2<input id="ownerPhone2" inputmode="tel" maxlength="15" placeholder="9876543210"></label>
+          <label>Contact 3<input id="ownerPhone3" inputmode="tel" maxlength="15" placeholder="9876543210"></label>
+          <label>Contact 4<input id="ownerPhone4" inputmode="tel" maxlength="15" placeholder="9876543210"></label>
+          <label style="grid-column:1/-1">Contact Message<input id="ownerContactText" maxlength="100" placeholder="Example: Call/WhatsApp for help"></label>
+        </div>
+        <button class="btn green" style="margin-top:10px" onclick="saveOwnerContact()">💾 Save 4 Contact Numbers</button>
+        <p class="small">Students ko ye 4 numbers booking page par Call aur WhatsApp buttons ke saath dikhenge.</p>
+        <div class="backupNote">
+          <b>💾 Data Backup & Restore</b><br><span class="small">Browser/device change hone se pehle backup rakhna useful hai.</span>
+          <div class="ownerQuick">
+            <button class="btn" onclick="backupData()">⬇ Backup Website Data</button>
+            <button class="btn secondary" onclick="document.getElementById('restoreFile').click()">⬆ Restore Backup</button>
+            <input id="restoreFile" type="file" accept="application/json" style="display:none" onchange="restoreData(event)">
+          </div>
+        </div>
+      </div>
+      <div id="ownerSeatManager"></div>
+      <p class="small">Collection estimate = selected date ke bookings × daily fee. Agar aap hourly fee use karte hain to is amount ko apne hisaab se adjust karein.</p>
+    </div>
+
+    <div class="card">
+      <h3>All Bookings</h3>
+      <input id="ownerSearch" placeholder="Name / mobile / seat se search karein" oninput="renderOwnerTable()">
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>Seat</th><th>Student</th><th>Mobile</th><th>Date</th><th>Time</th><th>Payment</th><th>Action</th></tr></thead>
+          <tbody id="ownerTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+
+const LANGKEY="shree_study_point_language";
+const I18N={
+en:{
+ownerPanelBtn:"🔐 Owner Panel",heroTitle:"📖 Your Dedicated Study Space",heroDesc:"Reserve your seat in advance for a quiet, comfortable and focused study environment.",
+badgeSeats:"📚 48 Dedicated Seats",badgeTime:"⏰ Flexible Timings",badgeFocus:"🎯 Focused Study",badgeEasy:"🔒 Easy Booking",
+peaceTitle:"🤫 Peaceful Environment",peaceDesc:"Less distraction, more concentration.",chooseTitle:"💺 Choose Your Seat",chooseDesc:"Select an available seat and book it.",supportTitle:"📞 Quick Support",supportDesc:"Connect directly using owner contacts.",
+bookingDetails:"📝 1. Booking Details",timingHelp:"Select your study plan",nameLabel:"Name",mobileLabel:"Mobile",dateLabel:"Date",planLabel:"Booking Type",fullDay:"Full Day",halfDay:"Half Day",sessionLabel:"Half Day Session",morning:"Morning",evening:"Evening",startLabel:"Start",endLabel:"End",
+seatTitle:"💺 2. Choose Your Study Seat",greenAvailable:"Green = available",available:"🟢 Available",selectedLegend:"🔵 Selected",bookedLegend:"🔴 Booked",
+confirmTitle:"✅ 3. Confirm Your Booking",confirmHelp:"Check your details before locking the seat",confirmBtn:"Confirm Booking",helpTitle:"📞 Need Help? Contact Study Point",myBookingsTitle:"📋 My Bookings"
+},
+hi:{
+ownerPanelBtn:"🔐 ओनर पैनल",heroTitle:"📖 आपकी पढ़ाई की सीट",heroDesc:"शांत, आरामदायक और focused study के लिए अपनी सीट पहले से reserve करें।",
+badgeSeats:"📚 48 सीटें",badgeTime:"⏰ Flexible Timing",badgeFocus:"🎯 Focused Study",badgeEasy:"🔒 आसान Booking",
+peaceTitle:"🤫 शांत वातावरण",peaceDesc:"कम distraction, ज्यादा concentration.",chooseTitle:"💺 अपनी सीट चुनें",chooseDesc:"Available seat select करके booking करें।",supportTitle:"📞 Quick Support",supportDesc:"Owner के contact से सीधे जुड़ें।",
+bookingDetails:"📝 1. Booking Details",timingHelp:"अपना study plan चुनें",nameLabel:"नाम",mobileLabel:"मोबाइल",dateLabel:"तारीख",planLabel:"Booking Type",fullDay:"पूरा दिन",halfDay:"आधा दिन",sessionLabel:"Half Day Session",morning:"सुबह",evening:"शाम",startLabel:"शुरू",endLabel:"समाप्त",
+seatTitle:"💺 2. अपनी Study Seat चुनें",greenAvailable:"हरा = उपलब्ध",available:"🟢 उपलब्ध",selectedLegend:"🔵 चुनी गई",bookedLegend:"🔴 Booked",
+confirmTitle:"✅ 3. Booking Confirm करें",confirmHelp:"Seat lock करने से पहले details check करें",confirmBtn:"Booking Confirm करें",helpTitle:"📞 मदद चाहिए? Study Point से संपर्क करें",myBookingsTitle:"📋 मेरी Bookings"
+}};
+let currentLang=localStorage.getItem(LANGKEY)||"en";
+function setLang(lang){
+ currentLang=lang; localStorage.setItem(LANGKEY,lang);
+ document.documentElement.lang=lang==="hi"?"hi":"en";
+ document.querySelectorAll("[data-i18n]").forEach(el=>{let k=el.dataset.i18n;if(I18N[lang][k])el.innerHTML=I18N[lang][k]});
+ document.getElementById("langEn").classList.toggle("active",lang==="en");
+ document.getElementById("langHi").classList.toggle("active",lang==="hi");
+ render(); mine(); renderOwnerContact();
+}
+
+const K="shree_study_point_bookings";
+const FEEK="shree_study_point_daily_fee";
+const DEFAULT_OWNER_PIN="1234";
+const PINKEY="shree_study_point_owner_pin";
+const PHONEKEYS=["shree_study_point_owner_phone1","shree_study_point_owner_phone2","shree_study_point_owner_phone3","shree_study_point_owner_phone4"];
+const CONTACTKEY="shree_study_point_owner_contact";
+function ownerPin(){return localStorage.getItem(PINKEY)||DEFAULT_OWNER_PIN}
+let selected=null, ownerOpen=false, $=x=>document.getElementById(x);
+
+function today(){let d=new Date();return d.toISOString().slice(0,10)}
+$("date").value=today(); $("date").min=today(); $("ownerDate").value=today();
+$("fee").value=localStorage.getItem(FEEK)||"500";
+
+function all(){return JSON.parse(localStorage.getItem(K)||"[]")}
+function save(x){localStorage.setItem(K,JSON.stringify(x))}
+function overlap(a,b,c,d){return a<d&&c<b}
+function updatePlan(){
+  const plan=$("plan").value, half=$("halfWrap"), session=$("session").value;
+  half.style.display=plan==="half"?"block":"none";
+  if(plan==="full"){$("start").value="08:00";$("end").value="20:00";}
+  else if(session==="morning"){$("start").value="08:00";$("end").value="14:00";}
+  else {$("start").value="14:00";$("end").value="20:00";}
+  selected=null; render();
+}
+function booked(s){
+  return all().some(x=>x.seat==s && x.date==$("date").value &&
+    overlap($("start").value,$("end").value,x.start,x.end));
+}
+function render(){
+  let q=$("seats"); q.innerHTML="";
+  const seatList=getSeatConfig();
+  $("seatBadge").textContent=(currentLang==="hi"?"📚 "+seatList.length+" सीटें":"📚 "+seatList.length+" Study Seats");
+  for(const s of seatList){
+    let b=booked(s);
+    let x=document.createElement("button");
+    x.className="seat "+(b?"booked ":"")+(selected==s&&!b?"selected":"");
+    x.disabled=b;
+    x.innerHTML="<b>"+s+"</b><br><small>"+(b?(currentLang==="hi"?"बुक्ड":"Booked"):(currentLang==="hi"?"उपलब्ध":"Available"))+"</small>";
+    if(!b)x.onclick=()=>{selected=s;render()};
+    q.appendChild(x);
+  }
+  $("sel").innerHTML=selected?(currentLang==="hi"?"चयनित सीट: ":"Selected: ")+"<b>"+selected+"</b>":(currentLang==="hi"?"Seat select करें।":"Select a seat.");
+  $("go").disabled=!selected;
+  $("bookingHint").textContent=selected
+    ? (currentLang==="hi"?"✅ "+selected+" selected — अब Confirm Booking दबाएँ।":"✅ "+selected+" selected — now click Confirm Booking.")
+    : (currentLang==="hi"?"💡 तारीख, timing और available seat चुनें।":"💡 Select a date, timing and available seat.");
+}
+$("go").onclick=()=>{
+  let n=$("name").value.trim(),m=$("mobile").value.trim(),s=$("start").value,e=$("end").value;
+  if(!$("date").value || $("date").value<today())return alert("Valid booking date select karein");
+  if(!selected)return alert("Pehle seat select karein");
+  if(n.length<2)return alert("Student name enter karein");
+  if(!/^\d{10}$/.test(m))return alert("10 digit mobile number enter karein");
+  if(s>=e)return alert("End time sahi select karein");
+  if(booked(selected))return alert("Seat already booked");
+  let a=all();
+  a.push({id:Date.now(),seat:selected,name:n,mobile:m,date:$("date").value,plan:$("plan").value,session:$("plan").value==="half"?$("session").value:"full",start:s,end:e,status:"active",paymentStatus:"pending"});
+  save(a); alert("Booking confirmed! Seat "+selected);
+  selected=null; if(!localStorage.getItem(PHONEKEYS[0])){
+  let old=localStorage.getItem("shree_study_point_owner_phone");
+  if(old)localStorage.setItem(PHONEKEYS[0],old);
+}
+render(); mine(); renderOwnerContact(); if(ownerOpen) refreshOwner();
+};
+function mine(){
+  let m=$("mobile").value.trim(),a=all().filter(x=>!m||x.mobile==m);
+  $("mine").innerHTML=a.length?a.map(x=>
+    '<div class="booking"><span><b>'+x.seat+'</b> — '+x.date+' '+x.start+'-'+x.end+'<br>'+x.name+' · '+x.mobile+
+    '</span><button class="btn danger" onclick="cancel('+x.id+')">Cancel</button></div>'
+  ).join(""):(currentLang==="hi"?"कोई booking नहीं मिली।":"No bookings found.");
+}
+function cancel(id){
+  if(confirm("Booking cancel karein?")){
+    save(all().filter(x=>x.id!=id)); if(!localStorage.getItem(PHONEKEYS[0])){
+  let old=localStorage.getItem("shree_study_point_owner_phone");
+  if(old)localStorage.setItem(PHONEKEYS[0],old);
+}
+render(); mine(); renderOwnerContact(); if(ownerOpen) refreshOwner();
+  }
+}
+function ownerLogin(){
+  if(ownerOpen){$("ownerPanel").scrollIntoView({behavior:"smooth"});return}
+  let pin=prompt("Owner PIN enter karein:");
+  if(pin===null)return;
+  if(pin!==ownerPin())return alert("Wrong Owner PIN");
+  ownerOpen=true; $("ownerPanel").style.display="block";
+  refreshOwner(); $("ownerPanel").scrollIntoView({behavior:"smooth"});
+}
+function ownerLogout(){ownerOpen=false;$("ownerPanel").style.display="none"}
+
+function changePin(){
+  let oldP=$("oldPin").value.trim(), newP=$("newPin").value.trim(), conf=$("confirmPin").value.trim();
+  if(oldP!==ownerPin()) return alert("Current PIN galat hai.");
+  if(newP.length<4) return alert("New PIN kam se kam 4 characters ka hona chahiye.");
+  if(newP!==conf) return alert("New PIN aur Confirm PIN match nahi karte.");
+  localStorage.setItem(PINKEY,newP);
+  $("oldPin").value=""; $("newPin").value=""; $("confirmPin").value="";
+  alert("Owner PIN successfully change ho gaya.");
+}
+function resetPin(){
+  if(!confirm("PIN ko default 1234 par reset karein?")) return;
+  localStorage.setItem(PINKEY,DEFAULT_OWNER_PIN);
+  alert("Owner PIN reset ho gaya. Naya PIN: 1234");
+}
+function saveOwnerContact(){
+  let phones=[1,2,3,4].map(n=>$("ownerPhone"+n).value.trim());
+  if(!phones.some(Boolean)) return alert("Kam se kam 1 contact number enter karein.");
+  phones.forEach((p,i)=>localStorage.setItem(PHONEKEYS[i],p));
+  localStorage.setItem(CONTACTKEY,$("ownerContactText").value.trim()||"Call/WhatsApp for help");
+  renderOwnerContact(); alert("4 contact numbers save ho gaye.");
+}
+function renderOwnerContact(){
+  let phones=PHONEKEYS.map(k=>localStorage.getItem(k)||"").filter(Boolean);
+  let c=localStorage.getItem(CONTACTKEY)||"Call/WhatsApp for help";
+  $("ownerContactDisplay").innerHTML=phones.length?'<b>'+escapeHtml(c)+'</b><br><span class="small">'+phones.length+' contact number'+(phones.length>1?'s':'')+' available</span>':'Owner contact number abhi set nahi hua.';
+  $("ownerContactButtons").innerHTML=phones.map((p,i)=>{
+    let clean=p.replace(/\D/g,""), wa=clean.length===10?"91"+clean:clean;
+    return '<div style="padding:12px;border:1px solid #dfe7ee;border-radius:12px;background:#f8fbfd"><b>Contact '+(i+1)+'</b><br><span>'+escapeHtml(p)+'</span><br><a href="tel:'+escapeHtml(p)+'" class="btn" style="display:inline-block;margin-top:7px;padding:8px 12px;text-decoration:none">📞 Call</a> <a href="https://wa.me/'+wa+'" target="_blank" rel="noopener" class="btn green" style="display:inline-block;margin-top:7px;padding:8px 12px;text-decoration:none">💬 WhatsApp</a></div>';
+  }).join("");
+  [1,2,3,4].forEach(n=>$("ownerPhone"+n).value=localStorage.getItem(PHONEKEYS[n-1])||"");
+  $("ownerContactText").value=c;
+}
+function refreshOwner(){
+  localStorage.setItem(FEEK,$("fee").value||"500");
+  let a=all(), d=$("ownerDate").value||today(), daily=a.filter(x=>x.date===d);
+  let active=daily.filter(x=>x.status!=="cancelled");
+  let pending=active.filter(x=>x.paymentStatus!=="paid").length;
+  $("stTotal").textContent=a.filter(x=>x.status!=="cancelled").length;
+  $("stToday").textContent=active.length;
+  $("stSeats").textContent=new Set(active.map(x=>x.seat)).size;
+  $("stRevenue").textContent="₹"+(active.length*Number($("fee").value||0)).toLocaleString("en-IN");
+  $("stPending").textContent=pending;
+  $("stFree").textContent=Math.max(0,getSeatConfig().length-new Set(active.map(x=>x.seat)).size);
+  renderOwnerTable();
+}
+function renderOwnerTable(){
+  let q=($("ownerSearch").value||"").toLowerCase();
+  let a=all().filter(x=>(x.name+" "+x.mobile+" "+x.seat+" "+x.date).toLowerCase().includes(q));
+  a.sort((x,y)=>(y.date+y.start).localeCompare(x.date+x.start));
+  $("ownerTable").innerHTML=a.length?a.map(x=>{
+    let pay=x.paymentStatus||"pending";
+    let status=x.status||"active";
+    return '<tr'+(status==='cancelled'?' style="opacity:.55"':'')+'><td><b>'+escapeHtml(x.seat)+'</b></td><td>'+escapeHtml(x.name)+'</td><td>'+escapeHtml(x.mobile)+
+    '</td><td>'+x.date+'</td><td>'+x.start+' - '+x.end+'</td><td><select class="statusSelect" onchange="setPayment('+x.id+',this.value)" '+(status==='cancelled'?'disabled':'')+'><option value="pending" '+(pay==='pending'?'selected':'')+'>Pending</option><option value="paid" '+(pay==='paid'?'selected':'')+'>Paid</option></select></td><td><button class="btn danger" onclick="ownerCancel('+x.id+')">Cancel</button></td></tr>';
+  }).join(""):'<tr><td colspan="7">No bookings found.</td></tr>';
+}
+function setPayment(id,value){
+  let a=all(), x=a.find(b=>b.id==id); if(!x)return;
+  x.paymentStatus=value; save(a); refreshOwner();
+}
+function ownerCancel(id){
+  let x=all().find(b=>b.id==id);
+  if(!x)return;
+  if(confirm("Is booking ko owner ke through cancel karein?\\n"+x.name+" — "+x.seat+" — "+x.date+" "+x.start+"-"+x.end)){
+    save(all().filter(b=>b.id!=id)); if(!localStorage.getItem(PHONEKEYS[0])){
+  let old=localStorage.getItem("shree_study_point_owner_phone");
+  if(old)localStorage.setItem(PHONEKEYS[0],old);
+}
+render(); mine(); renderOwnerContact(); refreshOwner();
+  }
+}
+function escapeHtml(v){
+  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+
+const SEAT_CONFIG_KEY="shree_study_point_seat_config";
+function getSeatConfig(){
+  try{
+    const raw=localStorage.getItem(SEAT_CONFIG_KEY);
+    if(raw){
+      const arr=JSON.parse(raw);
+      if(Array.isArray(arr) && arr.length) return arr.map(String);
+    }
+  }catch(e){}
+  return Array.from({length:48},(_,i)=>"A"+String(i+1).padStart(2,"0"));
+}
+function saveSeatConfig(arr){localStorage.setItem(SEAT_CONFIG_KEY,JSON.stringify(arr))}
+function renderOwnerSeatManager(){
+  const box=$("ownerSeatManager"); if(!box)return;
+  const seats=getSeatConfig();
+  box.innerHTML='<div class="seat-manager-card"><b>Seat Management</b><p class="small">Add or remove seats. Default: A01–A48; owner can add/remove seats.</p>'+
+    '<div class="seat-manager-row"><input id="newSeatName" maxlength="12" placeholder="e.g. B01"><button type="button" class="btn" onclick="addOwnerSeat()">+ Add Seat</button></div>'+
+    '<div class="managed-seat-list">'+seats.map((x,i)=>'<div class="managed-seat-item"><span>'+escapeHtml(x)+'</span><button type="button" class="danger-seat-btn" onclick="removeOwnerSeat('+i+')">Remove</button></div>').join("")+
+    '</div><div class="seat-count-note">Total seats: <strong>'+seats.length+'</strong></div></div>';
+}
+function addOwnerSeat(){
+  const input=$("newSeatName"), name=(input.value||"").trim().toUpperCase();
+  if(!name)return alert("Seat name enter karein");
+  const seats=getSeatConfig();
+  if(seats.includes(name))return alert("Ye seat already hai");
+  seats.push(name); saveSeatConfig(seats); input.value=""; renderOwnerSeatManager(); render();
+}
+function removeOwnerSeat(i){
+  const seats=getSeatConfig();
+  if(seats.length<=1)return alert("At least 1 seat rehni chahiye");
+  const name=seats[i];
+  if(!confirm("Seat "+name+" remove karein?"))return;
+  seats.splice(i,1); saveSeatConfig(seats);
+  if(selected===name)selected=null;
+  renderOwnerSeatManager(); render();
+}
+window.addEventListener("load",()=>renderOwnerSeatManager());
+
+function backupData(){
+  const data={version:1,createdAt:new Date().toISOString(),bookings:all(),seatConfig:getSeatConfig(),dailyFee:$("fee").value||"500",ownerContacts:PHONEKEYS.map(k=>localStorage.getItem(k)||""),contactText:localStorage.getItem(CONTACTKEY)||"",language:currentLang};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),link=document.createElement("a"); link.href=url; link.download="shree-study-point-backup-"+today()+".json"; link.click(); URL.revokeObjectURL(url);
+}
+function restoreData(e){
+  const file=e.target.files&&e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{try{
+    const d=JSON.parse(reader.result);
+    if(!Array.isArray(d.bookings)||!Array.isArray(d.seatConfig))throw new Error("Invalid backup");
+    if(!confirm("Backup restore karne se current website data replace ho jayega. Continue?"))return;
+    save(d.bookings); saveSeatConfig(d.seatConfig);
+    if(d.dailyFee) localStorage.setItem(FEEK,d.dailyFee);
+    if(Array.isArray(d.ownerContacts)) d.ownerContacts.slice(0,4).forEach((p,i)=>localStorage.setItem(PHONEKEYS[i],p||""));
+    if(typeof d.contactText==="string") localStorage.setItem(CONTACTKEY,d.contactText);
+    alert("Backup successfully restore ho gaya."); render(); mine(); renderOwnerContact(); refreshOwner();
+  }catch(err){alert("Backup file valid nahi hai.");} e.target.value="";};
+  reader.readAsText(file);
+}
+function printDailyReport(){
+  const d=$("ownerDate").value||today(), a=all().filter(x=>x.date===d && x.status!=="cancelled");
+  const fee=Number($("fee").value||0), total=a.length*fee, paid=a.filter(x=>x.paymentStatus==="paid").length;
+  const rows=a.map(x=>`<tr><td>${escapeHtml(x.seat)}</td><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.mobile)}</td><td>${x.start}-${x.end}</td><td>${x.paymentStatus==="paid"?"Paid":"Pending"}</td></tr>`).join("");
+  const w=window.open("","_blank"); if(!w)return alert("Popup allow karein, phir Print Report dabayein.");
+  w.document.write('<html><head><title>Shree Study Point - Daily Report</title><style>body{font-family:Arial;padding:24px}table{border-collapse:collapse;width:100%;margin-top:20px}th,td{border:1px solid #ccc;padding:8px;text-align:left}h1{margin-bottom:4px}</style></head><body><h1>Shree Study Point</h1><div>Daily Report: '+d+'</div><p>Bookings: '+a.length+' | Paid: '+paid+' | Pending: '+(a.length-paid)+' | Estimated Collection: ₹'+total.toLocaleString("en-IN")+'</p><table><tr><th>Seat</th><th>Student</th><th>Mobile</th><th>Time</th><th>Payment</th></tr>'+rows+'</table></body></html>'); w.document.close(); setTimeout(()=>w.print(),300);
+}
+function exportCSV(){
+  let a=all();
+  if(!a.length)return alert("Export ke liye koi booking nahi hai.");
+  let rows=[["Seat","Student Name","Mobile","Date","Start","End"]];
+  a.forEach(x=>rows.push([x.seat,x.name,x.mobile,x.date,x.start,x.end]));
+  let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\\n");
+  let blob=new Blob(["\\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+  let url=URL.createObjectURL(blob), link=document.createElement("a");
+  link.href=url; link.download="shree-study-point-bookings.csv"; link.click();
+  URL.revokeObjectURL(url);
+}
+["date"].forEach(x=>$(x).onchange=()=>{selected=null;render()});
+$("plan").onchange=updatePlan; $("session").onchange=updatePlan; updatePlan();
+$("mobile").oninput=mine;
+$("fee").oninput=()=>{localStorage.setItem(FEEK,$("fee").value||"0");if(ownerOpen)refreshOwner()};
+$("ownerDate").onchange=()=>{if(ownerOpen)refreshOwner();else renderOwnerTable()};
+if(!localStorage.getItem(PHONEKEYS[0])){
+  let old=localStorage.getItem("shree_study_point_owner_phone");
+  if(old)localStorage.setItem(PHONEKEYS[0],old);
+}
+setLang(currentLang);
+render(); mine(); renderOwnerContact();
+</script>
+
+
+
+
+
+
+</body>
+</html>
